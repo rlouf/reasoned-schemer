@@ -41,8 +41,31 @@
 (run* (q) (fresh (x) (== (cons x '()) q))) ; (_.0)
 
 ;; 26
+;; `(,x) is a shorthand for (cons x '())
 (run* (q) (fresh (x) (== `(,x) q)))     ; (_.0)
 
 ;; 30-31
 ;; We fuse two fresh variables using ==
 (run* (q) (fresh (x) (== x q)))         ; _.0
+
+;; 32
+(run* (q) (== '(((pea)) pod) '(((pea)) pod))) ; _.0
+
+;; 33
+(run* (q) (== '(((pea)) pod) `(((pea)) ,q))) ; pod
+
+;; 34
+(run* (q) (== `(((,q)) pod) '(((pea)) pod))) ; pea
+
+;; 35
+(run* (q) (fresh (x) (== `(((,x)) pod) `(((,q)) pod)))) ; _.0
+
+;; 36
+(run* (q) (fresh (x) (== `(((,q)) ,x) `(((,x)) pod)))) ; pod
+
+;; 37
+(run* (q) (fresh (x) (== `(,x ,x) q))) ; (_.0, _.0)
+
+;; 38
+;; Every variable by fresh or run* is initially different from any other variable. Two variables are then different if they have not been fused
+(run* (q) (fresh (x) (fresh (y) (== `(,q ,y) `((,x ,y) ,x))))) ; (_.0, _.0)
