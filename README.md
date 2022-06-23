@@ -9,6 +9,22 @@ raco pkg install github://github.com/miniKanren/Racket-miniKanren/master
 
 # Notes
 
-- The first law of `==`
-`(== v w )` can be replaced with `(== w v)`
+``` asciidoc
++--------------------------------------------------------------------+
+|                       The first law of ==                          |
+|                                                                    |
+|                (== v w ) can be replaced with (== w v)             |
++--------------------------------------------------------------------+
+```
+
+
 - Every variable is initially fresh. A variable is no longer fresh if it becomes associated with a non-variable value of if it becomes associated with a variable that, itself, is no longer fresh.
+
+``` asciidoc
++--------------------------------------------------------------------+
+|                      The second law of ==                          |
+|                                                                    |
+| If x is fresh, then (== v x) succeeds and associates v with x,     |
+| unless x occurs in v.                                              |
++--------------------------------------------------------------------+
+```

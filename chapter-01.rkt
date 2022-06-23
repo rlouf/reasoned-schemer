@@ -1,9 +1,9 @@
 #lang racket
 
 (require Racket-miniKanren/miniKanren/mk)
-(define succeed (== #t #t))
-(define fail (== #t #f))
 (define else succeed)
+(define fail (== #t #f))
+
 ;; TODO: Define #s and #u as shortcuts to succeed and fail respectively
 
 ;; 7
@@ -69,3 +69,50 @@
 ;; 38
 ;; Every variable by fresh or run* is initially different from any other variable. Two variables are then different if they have not been fused
 (run* (q) (fresh (x) (fresh (y) (== `(,q ,y) `((,x ,y) ,x))))) ; (_.0, _.0)
+
+;; 40
+(run* (q) (fresh (x) (== 'pea q)))      ; 'pea
+
+;; 41
+(run* (q) (fresh (x) (fresh (y) (== `(,x ,y) q)))) ; (_.0 _.1)
+
+;; 42
+(run* (s)
+  (fresh (t)
+    (fresh (u)
+      (== `(,t ,u) s))))                ; (_.0 _.1)
+
+;; 43
+(run* (q)
+      (fresh (x)
+             (fresh (y)
+                    (== `(,x ,y ,x) q)))) ; (_.0, _.1, _.0)
+
+;; 45
+(run* (q) (== '(pea) 'pea))             ; ()
+
+;; 46
+;; A variable cannot be equal to a list in which the variable occurs.
+;; A variable x occurs in a variable y when x appears in the value associated with y.
+;; A variable x occurs in a list l when x is an element l or x occurs in an element of l.
+(run* (q) (== `(,q) q))                 ; ()
+
+;; 50
+(run* (q) succeed succeed)      ; (_.0)
+
+;; 51
+(run* (q) succeed (== 'corn q))         ; 'corn
+
+;; 52
+(run* (q) fail (== 'corn q))         ; ()
+
+;; TODO: Define conj2
+
+;; 53
+(run* (q) (== 'corn q) (== 'meal q))         ; ()
+
+;; 54
+(run* (q) (== 'corn q) (== 'corn q))         ; 'corn
+
+;; TODO: Define disj2
+;; This could be useful: https://github.com/rymaju/mykanren#disj2
