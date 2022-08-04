@@ -1,0 +1,409 @@
+#+title: The Reasoned Schemer: Python
+#+property: header-args :results output
+
+#+begin_abstract
+We implement the examples from "The Reasoned Schemer" using [[https://github.com/pythological][Pythological]]'s implementation of miniKanren.
+#+end_abstract
+
+* Playthings
+
+#+name: 7
+#+begin_src python :session
+from kanren import var, run
+from kanren.core import fail
+
+q = var('q')
+res = run(0, q, fail)
+print(res)
+#+end_src
+
+#+RESULTS: 7
+: ()
+
+#+name: 10
+#+begin_src python :session
+from kanren import eq
+
+res = run(0, q, eq("pea", "pod"))
+print(res)
+#+end_src
+
+#+RESULTS: 10
+: ()
+
+#+name: 11
+#+begin_src python :session
+res = run(0, q, eq(q, "pea"))
+print(res)
+#+end_src
+
+#+RESULTS: 11
+: ('pea',)
+
+#+name: 12
+#+begin_src python :session
+res = run(0, q, eq("pea", q))
+print(res)
+#+end_src
+
+#+RESULTS: 12
+: ('pea',)
+
+#+name: 17
+#+begin_src python :session
+from kanren.core import succeed
+
+res = run(0, q, succeed)
+print(res)
+#+end_src
+
+#+RESULTS: 17
+: (~q,)
+
+#+name: 19
+#+begin_src python :session
+res = run(0, q, eq("pea", "pea"))
+print(res)
+#+end_src
+
+#+RESULTS: 19
+: (~q,)
+
+#+name: 20
+#+begin_src python :session
+res = run(0, q, eq(q, q))
+print(res)
+#+end_src
+
+#+RESULTS: 20
+: (~q,)
+
+Need to figure how to translate (run* (q) (fresh (x) (== 'pea q)))
+
+#+name: 21
+#+begin_src python :session
+x = var('x')
+res = run(0, q, eq(x, eq("pea", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 21
+: (~q,)
+
+
+#+name: 25
+#+begin_src python :session
+from cons import cons
+
+res = run(0, q, eq(x, eq(cons(x, ()), q)))
+print(res)
+#+end_src
+
+#+RESULTS: 25
+: (~q,)
+
+
+#+name: 26
+#+begin_src python :session
+res = run(0, q, eq(x, eq((x,), q)))
+print(res)
+#+end_src
+
+#+RESULTS: 26
+: (~q,)
+
+We can fuse two logical variables using =eq=:
+
+#+name: 31
+#+begin_src python :session
+res = run(0, q, eq(x, q))
+print(res)
+#+end_src
+
+#+RESULTS: 31
+: (~q,)
+
+#+name: 32
+#+begin_src python :session
+res = run(0, q, eq(((("pea",),),"pod"), ((("pea",),),"pod")))
+print(res)
+#+end_src
+
+#+RESULTS: 32
+: (~q,)
+
+#+name: 33
+#+begin_src python :session
+res = run(0, q, eq(((("pea",),),"pod"), ((("pea",),),q)))
+print(res)
+#+end_src
+
+#+RESULTS: 33
+: ('pod',)
+
+#+name: 34
+#+begin_src python :session
+res = run(0, q, eq((((q,),),"pod"), ((("pea",),),"pod")))
+print(res)
+#+end_src
+
+#+RESULTS: 34
+: ('pea',)
+
+#+name: 35
+#+begin_src python :session
+res = run(0, q, eq((((x),),"pod"), (((q,),),"pod")))
+print(res)
+#+end_src
+
+#+RESULTS: 35
+: (~q,)
+
+#+name: 36
+#+begin_src python :session
+res = run(0, q, eq((((q,),), x), (((x,),),"pod")))
+print(res)
+#+end_src
+
+#+RESULTS: 36
+: ('pod',)
+
+#+name: 37
+#+begin_src python :session
+res = run(0, q, eq((x, x), q))
+print(res)
+#+end_src
+
+#+RESULTS: 37
+: ((~x, ~x),)
+
+Every logic variable is initially different from any other variable. Two variables remain different as long as they have not been /fused/:
+
+#+name: 38
+#+begin_src python :session
+y = var('y')
+res = run(0, q, eq((q, y), ((x, y), x)))
+print(res)
+#+end_src
+
+#+RESULTS: 38
+: ((~x, ~x),)
+
+#+name: 40
+#+begin_src python :session
+res = run(0, q, eq("pea", q))
+print(res)
+#+end_src
+
+#+RESULTS: 40
+: ('pea',)
+
+#+name: 41
+#+begin_src python :session
+res = run(0, q, eq((x, y), q))
+print(res)
+#+end_src
+
+#+RESULTS: 41
+: ((~x, ~y),)
+
+#+name: 42
+#+begin_src python :session
+s, t, u = var('s'), var('t'), var('u')
+res = run(0, s, eq((t, u), s))
+print(res)
+#+end_src
+
+#+RESULTS: 42
+: ((~t, ~u),)
+
+#+name: 43
+#+begin_src python :session
+res = run(0, q, eq((x, y, x), q))
+print(res)
+#+end_src
+
+#+RESULTS: 43
+: ((~x, ~y, ~x),)
+
+
+#+name: 44
+#+begin_src python :session
+res = run(0, q, eq(("pea",), "pea"))
+print(res)
+#+end_src
+
+#+RESULTS: 44
+: ()
+
+A variable cannot be equal to a list in which a variable /occurs/.
+A variable x /occurs/ in a variable y when x appears in the value associated with y.
+A variable x /occurs/ in a list =l= when =x= is an element of =l= or =x= occurs in an element of =l=.
+
+*The following hangs.* See [[https://github.com/pythological/kanren/issues/58][this issue on the kanren repo]].
+
+#+name: 45
+#+begin_src python :session
+res = run(1, q, eq((q,), q))
+res = run(1, q, eq(cons(q,()), q))
+print(res)
+#+end_src
+
+#+name: 50
+#+begin_src python :session
+from kanren.core import lconj
+
+res = run(1, q, lconj(succeed, succeed))
+print(res)
+#+end_src
+
+#+RESULTS: 50
+: (~q,)
+
+#+name: 51
+#+begin_src python :session
+res = run(1, q, lconj(succeed, eq("corn", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 51
+: ('corn',)
+
+#+name: 52
+#+begin_src python :session
+res = run(1, q, lconj(fail, eq("corn", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 52
+: ()
+
+#+name: 53
+#+begin_src python :session
+res = run(1, q, lconj(eq("meal", q), eq("corn", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 53
+: ()
+
+#+name: 54
+#+begin_src python :session
+res = run(1, q, lconj(eq("corn", q), eq("corn", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 54
+: ('corn',)
+
+#+name: 55
+#+begin_src python :session
+from kanren.core import ldisj
+
+res = run(0, q, ldisj(fail, fail))
+print(res)
+#+end_src
+
+#+RESULTS: 55
+: ()
+
+#+name: 56
+#+begin_src python :session
+res = run(0, q, ldisj(eq("olive", q), fail))
+print(res)
+#+end_src
+
+#+RESULTS: 56
+: ('olive',)
+
+#+name: 57
+#+begin_src python :session
+res = run(0, q, ldisj(fail, eq("olive", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 57
+: ('olive',)
+
+#+name: 58
+#+begin_src python :session
+res = run(0, q, ldisj(eq("olive", q), eq("oil", q)))
+print(res)
+#+end_src
+
+#+RESULTS: 58
+: ('olive', 'oil')
+
+#+name: 59
+#+begin_src python :session
+x, y = var('x'), var('y')
+res = run(0, q, ldisj(eq((x, y), q), eq((y, x), q)))
+print(res)
+#+end_src
+
+#+RESULTS: 59
+: ((~x, ~y), (~y, ~x))
+
+#+name: 62
+#+begin_src python :session
+res = run(0, x, ldisj(
+    lconj(eq("olive", x), fail),
+    eq("oil", x)
+))
+print(res)
+#+end_src
+
+#+RESULTS: 62
+: ('oil',)
+
+#+name: 63
+#+begin_src python :session
+res = run(0, x, ldisj(
+    lconj(eq("olive", x), succeed),
+    eq("oil", x),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 63
+: ('olive', 'oil')
+
+#+name: 64
+#+begin_src python :session
+res = run(0, x, ldisj(
+    eq("oil", x),
+    lconj(eq("olive", x), succeed),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 64
+: ('oil', 'olive')
+
+#+name: 65
+#+begin_src python :session
+res = run(0, x, ldisj(
+    lconj(eq("virgin", x), fail),
+    ldisj(
+        eq("olive", x),
+        ldisj(
+            succeed,
+            eq("oil", x)
+        ),
+    )
+))
+print(res)
+#+end_src
+
+#+RESULTS: 65
+: ('olive', ~x, 'oil')
+
+* Teaching old toys new tricks
+* Seeings old friends in new ways
+* Double your fun
+* Members only
+* The fun never ends...
+* A bit too mch
+* Just a bit more
+* Thin ice
+* Under the hood
