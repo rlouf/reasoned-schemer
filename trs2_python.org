@@ -1,4 +1,4 @@
-#+title: The Reasoned Schemer: Python
+#+tiTLE: The Reasoned Schemer: Python
 #+property: header-args :results output
 
 #+begin_abstract
@@ -7,7 +7,7 @@ We implement the examples from "The Reasoned Schemer" using [[https://github.com
 
 * Playthings
 
-#+name: 7
+#+name: 1-7
 #+begin_src python :session
 from kanren import var, run
 from kanren.core import fail
@@ -17,10 +17,10 @@ res = run(0, q, fail)
 print(res)
 #+end_src
 
-#+RESULTS: 7
+#+RESULTS: 1-7
 : ()
 
-#+name: 10
+#+name: 1-10
 #+begin_src python :session
 from kanren import eq
 
@@ -28,28 +28,28 @@ res = run(0, q, eq("pea", "pod"))
 print(res)
 #+end_src
 
-#+RESULTS: 10
+#+RESULTS: 1-10
 : ()
 
-#+name: 11
+#+name: 1-11
 #+begin_src python :session
 res = run(0, q, eq(q, "pea"))
 print(res)
 #+end_src
 
-#+RESULTS: 11
+#+RESULTS: 1-11
 : ('pea',)
 
-#+name: 12
+#+name: 1-12
 #+begin_src python :session
 res = run(0, q, eq("pea", q))
 print(res)
 #+end_src
 
-#+RESULTS: 12
+#+RESULTS: 1-12
 : ('pea',)
 
-#+name: 17
+#+name: 1-17
 #+begin_src python :session
 from kanren.core import succeed
 
@@ -57,41 +57,40 @@ res = run(0, q, succeed)
 print(res)
 #+end_src
 
-#+RESULTS: 17
+#+RESULTS: 1-17
 : (~q,)
 
-#+name: 19
+#+name: 1-19
 #+begin_src python :session
 res = run(0, q, eq("pea", "pea"))
 print(res)
 #+end_src
 
-#+RESULTS: 19
+#+RESULTS: 1-19
 : (~q,)
 
-#+name: 20
+#+name: 1-20
 #+begin_src python :session
 res = run(0, q, eq(q, q))
 print(res)
 #+end_src
 
-#+RESULTS: 20
+#+RESULTS: 1-20
 : (~q,)
 
 Need to figure how to translate (run* (q) (fresh (x) (== 'pea q)))
 
-#+name: 21
+#+name: 1-21
 #+begin_src python :session
 x = var('x')
 res = run(0, q, eq(x, eq("pea", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 21
+#+RESULTS: 1-21
 : (~q,)
 
-
-#+name: 25
+#+name: 1-25
 #+begin_src python :session
 from cons import cons
 
@@ -99,141 +98,140 @@ res = run(0, q, eq(x, eq(cons(x, ()), q)))
 print(res)
 #+end_src
 
-#+RESULTS: 25
+#+RESULTS: 1-25
 : (~q,)
 
-
-#+name: 26
+#+name: 1-26
 #+begin_src python :session
 res = run(0, q, eq(x, eq((x,), q)))
 print(res)
 #+end_src
 
-#+RESULTS: 26
+#+RESULTS: 1-26
 : (~q,)
 
 We can fuse two logical variables using =eq=:
 
-#+name: 31
+#+name: 1-31
 #+begin_src python :session
 res = run(0, q, eq(x, q))
 print(res)
 #+end_src
 
-#+RESULTS: 31
+#+RESULTS: 1-31
 : (~q,)
 
-#+name: 32
+#+name: 1-32
 #+begin_src python :session
 res = run(0, q, eq(((("pea",),),"pod"), ((("pea",),),"pod")))
 print(res)
 #+end_src
 
-#+RESULTS: 32
+#+RESULTS: 1-32
 : (~q,)
 
-#+name: 33
+#+name: 1-33
 #+begin_src python :session
 res = run(0, q, eq(((("pea",),),"pod"), ((("pea",),),q)))
 print(res)
 #+end_src
 
-#+RESULTS: 33
+#+RESULTS: 1-33
 : ('pod',)
 
-#+name: 34
+#+name: 1-34
 #+begin_src python :session
 res = run(0, q, eq((((q,),),"pod"), ((("pea",),),"pod")))
 print(res)
 #+end_src
 
-#+RESULTS: 34
+#+RESULTS: 1-34
 : ('pea',)
 
-#+name: 35
+#+name: 1-35
 #+begin_src python :session
 res = run(0, q, eq((((x),),"pod"), (((q,),),"pod")))
 print(res)
 #+end_src
 
-#+RESULTS: 35
+#+RESULTS: 1-35
 : (~q,)
 
-#+name: 36
+#+name: 1-36
 #+begin_src python :session
 res = run(0, q, eq((((q,),), x), (((x,),),"pod")))
 print(res)
 #+end_src
 
-#+RESULTS: 36
+#+RESULTS: 1-36
 : ('pod',)
 
-#+name: 37
+#+name: 1-37
 #+begin_src python :session
 res = run(0, q, eq((x, x), q))
 print(res)
 #+end_src
 
-#+RESULTS: 37
+#+RESULTS: 1-37
 : ((~x, ~x),)
 
 Every logic variable is initially different from any other variable. Two variables remain different as long as they have not been /fused/:
 
-#+name: 38
+#+name: 1-38
 #+begin_src python :session
 y = var('y')
 res = run(0, q, eq((q, y), ((x, y), x)))
 print(res)
 #+end_src
 
-#+RESULTS: 38
+#+RESULTS: 1-38
 : ((~x, ~x),)
 
-#+name: 40
+#+name: 1-40
 #+begin_src python :session
 res = run(0, q, eq("pea", q))
 print(res)
 #+end_src
 
-#+RESULTS: 40
+#+RESULTS: 1-40
 : ('pea',)
 
-#+name: 41
+#+name: 1-41
 #+begin_src python :session
 res = run(0, q, eq((x, y), q))
 print(res)
 #+end_src
 
-#+RESULTS: 41
+#+RESULTS: 1-41
 : ((~x, ~y),)
 
-#+name: 42
+#+name: 1-42
 #+begin_src python :session
 s, t, u = var('s'), var('t'), var('u')
 res = run(0, s, eq((t, u), s))
 print(res)
 #+end_src
 
-#+RESULTS: 42
+#+RESULTS: 1-42
 : ((~t, ~u),)
 
-#+name: 43
+#+name: 1-43
 #+begin_src python :session
 res = run(0, q, eq((x, y, x), q))
 print(res)
 #+end_src
 
-#+RESULTS: 43
+#+RESULTS: 1-43
 : ((~x, ~y, ~x),)
 
 
-#+name: 44
+#+name: 1-44
 #+begin_src python :session
 res = run(0, q, eq(("pea",), "pea"))
 print(res)
 #+end_src
 
-#+RESULTS: 44
+#+RESULTS: 1-44
 : ()
 
 A variable cannot be equal to a list in which a variable /occurs/.
@@ -242,14 +240,16 @@ A variable x /occurs/ in a list =l= when =x= is an element of =l= or =x= occurs 
 
 *The following hangs.* See [[https://github.com/pythological/kanren/issues/58][this issue on the kanren repo]].
 
-#+name: 45
+#+name: 1-45
 #+begin_src python :session
-res = run(1, q, eq((q,), q))
-res = run(1, q, eq(cons(q,()), q))
-print(res)
+#res = run(1, q, eq((q,), q))
+#res = run(1, q, eq(cons(q,()), q))
+#print(res)
 #+end_src
 
-#+name: 50
+#+RESULTS: 1-45
+
+#+name: 1-50
 #+begin_src python :session
 from kanren.core import lconj
 
@@ -257,46 +257,46 @@ res = run(1, q, lconj(succeed, succeed))
 print(res)
 #+end_src
 
-#+RESULTS: 50
+#+RESULTS: 1-50
 : (~q,)
 
-#+name: 51
+#+name: 1-51
 #+begin_src python :session
 res = run(1, q, lconj(succeed, eq("corn", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 51
+#+RESULTS: 1-51
 : ('corn',)
 
-#+name: 52
+#+name: 1-52
 #+begin_src python :session
 res = run(1, q, lconj(fail, eq("corn", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 52
+#+RESULTS: 1-52
 : ()
 
-#+name: 53
+#+name: 1-53
 #+begin_src python :session
 res = run(1, q, lconj(eq("meal", q), eq("corn", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 53
+#+RESULTS: 1-53
 : ()
 
-#+name: 54
+#+name: 1-54
 #+begin_src python :session
 res = run(1, q, lconj(eq("corn", q), eq("corn", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 54
+#+RESULTS: 1-54
 : ('corn',)
 
-#+name: 55
+#+name: 1-55
 #+begin_src python :session
 from kanren.core import ldisj
 
@@ -304,47 +304,47 @@ res = run(0, q, ldisj(fail, fail))
 print(res)
 #+end_src
 
-#+RESULTS: 55
+#+RESULTS: 1-55
 : ()
 
-#+name: 56
+#+name: 1-56
 #+begin_src python :session
 res = run(0, q, ldisj(eq("olive", q), fail))
 print(res)
 #+end_src
 
-#+RESULTS: 56
+#+RESULTS: 1-56
 : ('olive',)
 
-#+name: 57
+#+name: 1-57
 #+begin_src python :session
 res = run(0, q, ldisj(fail, eq("olive", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 57
+#+RESULTS: 1-57
 : ('olive',)
 
-#+name: 58
+#+name: 1-58
 #+begin_src python :session
 res = run(0, q, ldisj(eq("olive", q), eq("oil", q)))
 print(res)
 #+end_src
 
-#+RESULTS: 58
+#+RESULTS: 1-58
 : ('olive', 'oil')
 
-#+name: 59
+#+name: 1-59
 #+begin_src python :session
 x, y = var('x'), var('y')
 res = run(0, q, ldisj(eq((x, y), q), eq((y, x), q)))
 print(res)
 #+end_src
 
-#+RESULTS: 59
+#+RESULTS: 1-59
 : ((~x, ~y), (~y, ~x))
 
-#+name: 62
+#+name: 1-62
 #+begin_src python :session
 res = run(0, x, ldisj(
     lconj(eq("olive", x), fail),
@@ -353,10 +353,10 @@ res = run(0, x, ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 62
+#+RESULTS: 1-62
 : ('oil',)
 
-#+name: 63
+#+name: 1-63
 #+begin_src python :session
 res = run(0, x, ldisj(
     lconj(eq("olive", x), succeed),
@@ -365,10 +365,10 @@ res = run(0, x, ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 63
+#+RESULTS: 1-63
 : ('olive', 'oil')
 
-#+name: 64
+#+name: 1-64
 #+begin_src python :session
 res = run(0, x, ldisj(
     eq("oil", x),
@@ -377,10 +377,10 @@ res = run(0, x, ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 64
+#+RESULTS: 1-64
 : ('oil', 'olive')
 
-#+name: 65
+#+name: 1-65
 #+begin_src python :session
 res = run(0, x, ldisj(
     lconj(eq("virgin", x), fail),
@@ -395,10 +395,10 @@ res = run(0, x, ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 65
+#+RESULTS: 1-65
 : ('olive', ~x, 'oil')
 
-#+name: 67
+#+name: 1-67
 #+begin_src python :session
 r = var('r')
 res = run(0, r, lconj(
@@ -411,10 +411,10 @@ res = run(0, r, lconj(
 print(res)
 #+end_src
 
-#+RESULTS: 67
+#+RESULTS: 1-67
 : (('split', 'pea'),)
 
-#+name: 68
+#+name: 1-68
 #+begin_src python :session
 res = run(0, r, lconj(
     lconj(
@@ -426,12 +426,12 @@ res = run(0, r, lconj(
 print(res)
 #+end_src
 
-#+RESULTS: 68
+#+RESULTS: 1-68
 : (('split', 'pea'),)
 
 Let's now simplify this expression:
 
-#+name: 75
+#+name: 1-75
 #+begin_src python :session
 res = run(0, (x, y), lconj(
         eq("split", x),
@@ -440,11 +440,10 @@ res = run(0, (x, y), lconj(
 print(res)
 #+end_src
 
-#+RESULTS: 75
+#+RESULTS: 1-75
 : (('split', 'pea'),)
 
-
-#+name: 76
+#+name: 1-76
 #+begin_src python :session
 res = run(0, (x, y), ldisj(
         lconj(
@@ -459,10 +458,10 @@ res = run(0, (x, y), ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 76
+#+RESULTS: 1-76
 : (('split', 'pea'), ('red', 'bean'))
 
-#+name: 77
+#+name: 1-77
 #+begin_src python :session
 res = run(0, r, lconj(
     ldisj(
@@ -480,10 +479,10 @@ res = run(0, r, lconj(
 print(res)
 #+end_src
 
-#+RESULTS: 77
+#+RESULTS: 1-77
 : (('split', 'pea', 'soup'), ('red', 'bean', 'soup'))
 
-#+name: 82
+#+name: 1-82
 #+begin_src python :session :results silent
 def teacupo(t):
     return ldisj(eq("tea", t), eq("cup", t))
@@ -491,16 +490,16 @@ def teacupo(t):
 
 #+RESULTS: 82
 
-#+name: 83
+#+name: 1-83
 #+begin_src python :session
 res = run(0, q, teacupo(q))
 print(res)
 #+end_src
 
-#+RESULTS: 83
+#+RESULTS: 1-83
 : ('tea', 'cup')
 
-#+name: 84
+#+name: 1-84
 #+begin_src python :session
 res = run(0, (x, y), ldisj(
     lconj(teacupo(x), eq(succeed, y)),
@@ -509,30 +508,30 @@ res = run(0, (x, y), ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 84
-: (('tea', <function succeed at 0x7f24df7c5240>), (<function fail at 0x7f24df7c5090>, <function succeed at 0x7f24df7c5240>), ('cup', <function succeed at 0x7f24df7c5240>))
+#+RESULTS: 1-84
+: (('tea', <function succeed at 0x7facc6cfc430>), (<function fail at 0x7facc6cfc310>, <function succeed at 0x7facc6cfc430>), ('cup', <function succeed at 0x7facc6cfc430>))
 
-#+name: 85
+#+name: 1-85
 #+begin_src python :session
 res = run(0, (x, y), teacupo(x), teacupo(y))
 print(res)
 #+end_src
 
-#+RESULTS: 85
+#+RESULTS: 1-85
 : (('tea', 'tea'), ('cup', 'tea'), ('tea', 'cup'), ('cup', 'cup'))
 
-/this will need an explantion to understand why 'tea' and 'cup' are not repeated. hunch this may be related to what we see in *walko*/
+/this will need an explantion to understand why 'tea' and 'cup' are not repeated./
 
-#+name: 86
+#+name: 1-86
 #+begin_src python :session
 res = run(0, (x, y), teacupo(x), teacupo(x))
 print(res)
 #+end_src
 
-#+RESULTS: 86
+#+RESULTS: 1-86
 : (('tea', ~y), ('cup', ~y))
 
-#+name: 87
+#+name: 1-87
 #+begin_src python :session
 res = run(0, (x, y), ldisj(
     lconj(teacupo(x), teacupo(x)),
@@ -541,10 +540,10 @@ res = run(0, (x, y), ldisj(
 print(res)
 #+end_src
 
-#+RESULTS: 87
-: (('tea', ~y), (<function fail at 0x7f24df7c5090>, 'tea'), ('cup', ~y), (<function fail at 0x7f24df7c5090>, 'cup'))
+#+RESULTS: 1-87
+: (('tea', ~y), (<function fail at 0x7facc6cfc310>, 'tea'), ('cup', ~y), (<function fail at 0x7facc6cfc310>, 'cup'))
 
-#+name: 88
+#+name: 1-88
 #+begin_src python :session
 from kanren import conde
 
@@ -555,10 +554,10 @@ res = run(0, (x, y), conde(
 print(res)
 #+end_src
 
-#+RESULTS: 88
+#+RESULTS: 1-88
 : (('split', 'pea'), ('red', 'bean'))
 
-#+name: 89
+#+name: 1-89
 #+begin_src python :session
 res = run(0, r, conde(
     (eq("olive", r), fail),
@@ -567,10 +566,10 @@ res = run(0, r, conde(
 print(res)
 #+end_src
 
-#+RESULTS: 89
+#+RESULTS: 1-89
 : ('oil',)
 
-#+name: 90
+#+name: 1-90
 #+begin_src python :session
 z = var('z')
 res = run(0, (x, y), conde(
@@ -580,10 +579,10 @@ res = run(0, (x, y), conde(
 print(res)
 #+end_src
 
-#+RESULTS: 90
+#+RESULTS: 1-90
 : ((~x, ~y), (~y, ~y))
 
-#+name: 91
+#+name: 1-91
 #+begin_src python :session
 res = run(0, (x, y), conde(
     (eq("split", x), eq("pea", y)),
@@ -593,7 +592,7 @@ res = run(0, (x, y), conde(
 print(res)
 #+end_src
 
-#+RESULTS: 91
+#+RESULTS: 1-91
 : (('split', 'pea'), ('red', 'bean'), ('green', 'lentil'))
 
 #+begin_quote
@@ -609,7 +608,220 @@ Every /successful/ $\text{cond}^e$ line contributes one or more values.
 
 We will see $\text{car}^o$, $\text{cons}^o$ and $\text{cdr}^o$.
 
+** car
+
+#+name: 2-1
+#+begin_src python :session
+from cons import car
+
+print(car(("grape", "raisin", "pear")))
+#+end_src
+
+#+RESULTS: 2-1
+: grape
+
+#+name: 2-2
+#+begin_src python :session
+print(car(tuple("acorn")))
+#+end_src
+
+#+RESULTS: 2-2
+: a
+
+The definition of =caro= is given in frame 6 but since it is not implemented in =kanren= we need to define it now:
+
+#+begin_src python :session
+def caro(t, car):
+    return eq(cons(car, var()), t)
+#+end_src
+
+#+RESULTS:
+
+#+name: 2-3
+#+begin_src python :session
+res = run(0, q, caro(tuple("acorn"), q))
+print(res)
+#+end_src
+
+#+RESULTS: 2-3
+: ('a',)
+
+#+name: 2-4
+#+begin_src python :session
+res = run(0, q, caro(tuple("acorn"), "a"))
+print(res)
+#+end_src
+
+#+RESULTS: 2-4
+: (~q,)
+
+#+name: 2-5
+#+begin_src python :session
+res = run(0, r, caro((r, y), x), eq("pear", x))
+print(res)
+#+end_src
+
+#+RESULTS: 2-5
+: ('pear',)
+
+** cdr
+
+#+name: 2-7
+#+begin_src python :session
+res = cons(
+    car(("grape", "raisin", "pear")),
+    car((("a"), ("b"), ("c"))),
+)
+print(res)
+#+end_src
+
+#+RESULTS: 2-7
+: (grape . a)
+
+
+#+name: 2-8
+#+begin_src python :session
+res = run(
+    0,
+    r,
+    caro(("grape", "raisin", "pear"), x),
+    caro((("a"), ("b"), ("c")), y),
+    eq(cons(x, y), r)
+)
+
+print(res)
+#+end_src
+
+#+RESULTS: 2-8
+: (ConsPair('grape', 'a'),)
+
+#+name: 2-10
+#+begin_src python :session
+from cons import cdr
+
+res = cdr(("grape", "raisin", "pear"))
+print(res)
+#+end_src
+
+#+RESULTS: 2-10
+: ('raisin', 'pear')
+
+
+#+name: 2-11
+#+begin_src python :session
+from cons import cdr
+
+res = car(cdr(cdr(tuple("acorn"))))
+print(res)
+#+end_src
+
+#+RESULTS: 2-11
+: o
+
+We can now define =cdro= using =conso=:
+
+#+begin_src python :session :results silent
+def cdro(p, d):
+    return eq(cons(var(), d), p)
+#+end_src
+
+#+name: 2-12
+#+begin_src python :session
+v, w = var("v"), var("w")
+res = run(0, r,
+    cdro(tuple("acorn"), v),
+    cdro(v, w),
+    caro(w, r),
+)
+print(res)
+#+end_src
+
+#+RESULTS: 2-12
+: ('o',)
+
+#+name: 2-14
+#+begin_src python :session
+res = cons(
+    cdr(("grape", "raisin", "pear")),
+    car((("a"), ("b"), ("c"))),
+)
+print(res)
+#+end_src
+
+#+RESULTS: 2-14
+: (('raisin', 'pear') . a)
+
+#+name: 2-15
+#+begin_src python :session
+res = run(0, r,
+    cdro(("grape", "raisin", "pear"), x),
+    caro((("a"), ("b"), ("c")), y),
+    eq(cons(x, y), r)
+)
+print(res)
+#+end_src
+
+#+RESULTS: 2-15
+: (ConsPair(('raisin', 'pear'), 'a'),)
+
+Another way that might reflect more the fact that =fresh(x, y)= only defines =x= and =y= in the current scope:
+
+#+begin_src python :session
+from kanren import lall
+
+def goal(r):
+    x, y = var('x'), var('y')
+    return lall(
+        cdro(("grape", "raisin", "pear"), x),
+        caro((("a"), ("b"), ("c")), y),
+        eq(cons(x, y), r)
+    )
+
+print(run(0, r, goal(r)))
+#+end_src
+
+#+RESULTS:
+: (ConsPair(('raisin', 'pear'), 'a'),)
+
+#+name: 2-16
+#+begin_src python :session
+print(run(0, r, cdro(tuple("acorn"), tuple("corn"))))
+#+end_src
+
+#+RESULTS: 2-16
+: (~r,)
+
+#+name: 2-17
+#+begin_src python :session
+print(run(0, x, cdro(tuple("corn"), (x, "r", "n"))))
+#+end_src
+
+#+RESULTS: 2-17
+: ('o',)
+
+#+name: 2-18
+#+begin_src python :session
+def goal(l):
+    x = var()
+    return lall(
+        cdro(l, tuple("corn")),
+        caro(l, x),
+        eq("a", x)
+    )
+
+print(run(0, r, goal(r)))
+#+end_src
+
+#+RESULTS: 2-18
+: (('a', 'c', 'o', 'r', 'n'),)
+
+** conso
+** pairo
+** nullo
+** singleton
+
 * Seeings old friends in new ways
+
 * Double your fun
 * Members only
 * The fun never ends...
