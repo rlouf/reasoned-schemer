@@ -398,7 +398,217 @@ print(res)
 #+RESULTS: 65
 : ('olive', ~x, 'oil')
 
+#+name: 67
+#+begin_src python :session
+r = var('r')
+res = run(0, r, lconj(
+    eq("split", x),
+    lconj(
+        eq("pea", y),
+        eq((x, y), r)
+    ),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 67
+: (('split', 'pea'),)
+
+#+name: 68
+#+begin_src python :session
+res = run(0, r, lconj(
+    lconj(
+        eq("split", x),
+        eq("pea", y),
+    ),
+    eq((x, y), r),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 68
+: (('split', 'pea'),)
+
+Let's now simplify this expression:
+
+#+name: 75
+#+begin_src python :session
+res = run(0, (x, y), lconj(
+        eq("split", x),
+        eq("pea", y),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 75
+: (('split', 'pea'),)
+
+
+#+name: 76
+#+begin_src python :session
+res = run(0, (x, y), ldisj(
+        lconj(
+            eq("split", x),
+            eq("pea", y),
+        ),
+        lconj(
+            eq("red", x),
+            eq("bean", y),
+        ),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 76
+: (('split', 'pea'), ('red', 'bean'))
+
+#+name: 77
+#+begin_src python :session
+res = run(0, r, lconj(
+    ldisj(
+        lconj(
+            eq("split", x),
+            eq("pea", y),
+        ),
+        lconj(
+            eq("red", x),
+            eq("bean", y),
+        ),
+    ),
+    eq((x, y, "soup"), r)
+))
+print(res)
+#+end_src
+
+#+RESULTS: 77
+: (('split', 'pea', 'soup'), ('red', 'bean', 'soup'))
+
+#+name: 82
+#+begin_src python :session :results silent
+def teacupo(t):
+    return ldisj(eq("tea", t), eq("cup", t))
+#+end_src
+
+#+RESULTS: 82
+
+#+name: 83
+#+begin_src python :session
+res = run(0, q, teacupo(q))
+print(res)
+#+end_src
+
+#+RESULTS: 83
+: ('tea', 'cup')
+
+#+name: 84
+#+begin_src python :session
+res = run(0, (x, y), ldisj(
+    lconj(teacupo(x), eq(succeed, y)),
+    lconj(eq(fail, x), eq(succeed, y))
+))
+print(res)
+#+end_src
+
+#+RESULTS: 84
+: (('tea', <function succeed at 0x7f24df7c5240>), (<function fail at 0x7f24df7c5090>, <function succeed at 0x7f24df7c5240>), ('cup', <function succeed at 0x7f24df7c5240>))
+
+#+name: 85
+#+begin_src python :session
+res = run(0, (x, y), teacupo(x), teacupo(y))
+print(res)
+#+end_src
+
+#+RESULTS: 85
+: (('tea', 'tea'), ('cup', 'tea'), ('tea', 'cup'), ('cup', 'cup'))
+
+/this will need an explantion to understand why 'tea' and 'cup' are not repeated. hunch this may be related to what we see in *walko*/
+
+#+name: 86
+#+begin_src python :session
+res = run(0, (x, y), teacupo(x), teacupo(x))
+print(res)
+#+end_src
+
+#+RESULTS: 86
+: (('tea', ~y), ('cup', ~y))
+
+#+name: 87
+#+begin_src python :session
+res = run(0, (x, y), ldisj(
+    lconj(teacupo(x), teacupo(x)),
+    lconj(eq(fail, x), teacupo(y)),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 87
+: (('tea', ~y), (<function fail at 0x7f24df7c5090>, 'tea'), ('cup', ~y), (<function fail at 0x7f24df7c5090>, 'cup'))
+
+#+name: 88
+#+begin_src python :session
+from kanren import conde
+
+res = run(0, (x, y), conde(
+    (eq("split", x), eq("pea", y)),
+    (eq("red", x), eq("bean", y)),
+))
+print(res)
+#+end_src
+
+#+RESULTS: 88
+: (('split', 'pea'), ('red', 'bean'))
+
+#+name: 89
+#+begin_src python :session
+res = run(0, r, conde(
+    (eq("olive", r), fail),
+    (eq("oil", r),)
+))
+print(res)
+#+end_src
+
+#+RESULTS: 89
+: ('oil',)
+
+#+name: 90
+#+begin_src python :session
+z = var('z')
+res = run(0, (x, y), conde(
+    (eq("lentil", z),),
+    (eq(x, y),)
+))
+print(res)
+#+end_src
+
+#+RESULTS: 90
+: ((~x, ~y), (~y, ~y))
+
+#+name: 91
+#+begin_src python :session
+res = run(0, (x, y), conde(
+    (eq("split", x), eq("pea", y)),
+    (eq("red", x), eq("bean", y)),
+    (eq("green", x), eq("lentil", y))
+))
+print(res)
+#+end_src
+
+#+RESULTS: 91
+: (('split', 'pea'), ('red', 'bean'), ('green', 'lentil'))
+
+#+begin_quote
+The law of $\text{cond}^e$:
+
+Every /successful/ $\text{cond}^e$ line contributes one or more values.
+#+end_quote
+
+** TODO What is a logic variable
+** TODO What is a goal here?
+
 * Teaching old toys new tricks
+
+We will see $\text{car}^o$, $\text{cons}^o$ and $\text{cdr}^o$.
+
 * Seeings old friends in new ways
 * Double your fun
 * Members only
