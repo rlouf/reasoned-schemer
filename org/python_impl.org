@@ -960,7 +960,7 @@ print(res)
 
 ** nullo
 
-#+name 2-30
+#+name: 2-30
 #+begin_src python :session
 from kanren.goals import nullo
 
@@ -968,10 +968,10 @@ res = run(0, l, nullo(("gape", "raison", "pear")))
 print(res)
 #+end_src
 
-#+RESULTS:
+#+RESULTS: 2-30
 : ()
 
-#+name 2-31
+#+name: 2-31
 #+begin_src python :session
 res = run(0, l, nullo([]))
 print(res)
@@ -980,13 +980,13 @@ res = run(0, l, nullo(()))
 print(res)
 #+end_src
 
-#+RESULTS:
+#+RESULTS: 2-31
 : (~l,)
 : (~l,)
 
 Note that by default =ConsNull= is a =list=, but this can be changed by passing =tuple= as a kwarg:
 
-#+name 2-32
+#+name: 2-32
 #+begin_src python :session
 res = run(0, x, nullo(x))
 print(res)
@@ -995,7 +995,7 @@ res = run(0, x, nullo(x, default_ConsNull=tuple))
 print(res)
 #+end_src
 
-#+RESULTS:
+#+RESULTS: 2-32
 : ([],)
 : ((),)
 
@@ -1005,11 +1005,13 @@ print(res)
 
 Here we assume that the nulltype is an empty tuple. See the [[https://github.com/pythological/kanren/blob/9f19cd4077db010ed20e037dc7bda3ff230bda6e/kanren/goals.py#L42][implementation in kanren]].
 
-#+name 2-33
+#+name: 2-33
 #+begin_src python :session
 def nullo(x):
     return eq(x, tuple())
 #+end_src
+
+#+RESULTS: 2-33
 
 The following two relations are very lisp-specific, but we will cover them for pedagogical purposes anyway.
 
