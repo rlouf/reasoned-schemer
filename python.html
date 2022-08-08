@@ -1,0 +1,1514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-08-08 Mon 18:39 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Reasoned Schemer: Python</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Rémi Louf" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="style.css" /><script data-goatcounter="https://thetypicalset.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">The Reasoned Schemer: Python</h1>
+<div class="abstract">
+<p>
+We implement the examples from "The Reasoned Schemer" using <a href="https://github.com/pythological">Pythological</a>'s implementation of miniKanren.
+</p>
+
+</div>
+
+<div id="outline-container-org10d5d33" class="outline-2">
+<h2 id="org10d5d33">Playthings</h2>
+<div class="outline-text-2" id="text-org10d5d33">
+<div class="org-src-container">
+<pre class="src src-python" id="org68927db"><span style="font-weight: bold;">from</span> kanren <span style="font-weight: bold;">import</span> var, run
+<span style="font-weight: bold;">from</span> kanren.core <span style="font-weight: bold;">import</span> fail
+
+<span style="font-weight: bold; font-style: italic;">q</span> = var(<span style="font-style: italic;">'q'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, fail)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga3aac2a"><span style="font-weight: bold;">from</span> kanren <span style="font-weight: bold;">import</span> eq
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(<span style="font-style: italic;">"pea"</span>, <span style="font-style: italic;">"pod"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org075dd4d"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(q, <span style="font-style: italic;">"pea"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pea',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgec7913e"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(<span style="font-style: italic;">"pea"</span>, q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pea',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org68cb307"><span style="font-weight: bold;">from</span> kanren.core <span style="font-weight: bold;">import</span> succeed
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, succeed)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3ae8a58"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(<span style="font-style: italic;">"pea"</span>, <span style="font-style: italic;">"pea"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org66ae4aa"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(q, q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<p>
+Need to figure how to translate (run* (q) (fresh (x) (== 'pea q)))
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orged0f73d"><span style="font-weight: bold; font-style: italic;">x</span> = var(<span style="font-style: italic;">'x'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(x, eq(<span style="font-style: italic;">"pea"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga27daa7"><span style="font-weight: bold;">from</span> cons <span style="font-weight: bold;">import</span> cons
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(x, eq(cons(x, ()), q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6bf6621"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(x, eq((x,), q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<p>
+We can fuse two logical variables using <code>eq</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgae62553"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(x, q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd6130c2"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((((<span style="font-style: italic;">"pea"</span>,),),<span style="font-style: italic;">"pod"</span>), (((<span style="font-style: italic;">"pea"</span>,),),<span style="font-style: italic;">"pod"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf1c4d3f"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((((<span style="font-style: italic;">"pea"</span>,),),<span style="font-style: italic;">"pod"</span>), (((<span style="font-style: italic;">"pea"</span>,),),q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pod',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4b4164f"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((((q,),),<span style="font-style: italic;">"pod"</span>), (((<span style="font-style: italic;">"pea"</span>,),),<span style="font-style: italic;">"pod"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pea',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org54035cd"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((((x),),<span style="font-style: italic;">"pod"</span>), (((q,),),<span style="font-style: italic;">"pod"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8f6a217"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((((q,),), x), (((x,),),<span style="font-style: italic;">"pod"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pod',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga5c7014"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((x, x), q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~x),)
+
+</pre>
+
+<p>
+Every logic variable is initially different from any other variable. Two variables remain different as long as they have not been <i>fused</i>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb1a311c"><span style="font-weight: bold; font-style: italic;">y</span> = var(<span style="font-style: italic;">'y'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((q, y), ((x, y), x)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~x),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2072569"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq(<span style="font-style: italic;">"pea"</span>, q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pea',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7501003"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((x, y), q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~y),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org33b43ba"><span style="font-weight: bold; font-style: italic;">s</span>, <span style="font-weight: bold; font-style: italic;">t</span>, <span style="font-weight: bold; font-style: italic;">u</span> = var(<span style="font-style: italic;">'s'</span>), var(<span style="font-style: italic;">'t'</span>), var(<span style="font-style: italic;">'u'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, s, eq((t, u), s))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~t, ~u),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgdafbe86"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((x, y, x), q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~y, ~x),)
+
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org715d0ba"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, eq((<span style="font-style: italic;">"pea"</span>,), <span style="font-style: italic;">"pea"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<p>
+A variable cannot be equal to a list in which a variable <i>occurs</i>.
+A variable x <i>occurs</i> in a variable y when x appears in the value associated with y.
+A variable x <i>occurs</i> in a list <code>l</code> when <code>x</code> is an element of <code>l</code> or <code>x</code> occurs in an element of <code>l</code>.
+</p>
+
+<p>
+<b>The following hangs.</b> See <a href="https://github.com/pythological/kanren/issues/58">this issue on the kanren repo</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org17731e8"><span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">res = run(1, q, eq((q,), q))</span>
+<span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">res = run(1, q, eq(cons(q,()), q))</span>
+<span style="font-weight: bold; font-style: italic;">#</span><span style="font-weight: bold; font-style: italic;">print(res)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org45b4b4b"><span style="font-weight: bold;">from</span> kanren.core <span style="font-weight: bold;">import</span> lconj
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(1, q, lconj(succeed, succeed))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4c7c03a"><span style="font-weight: bold; font-style: italic;">res</span> = run(1, q, lconj(succeed, eq(<span style="font-style: italic;">"corn"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('corn',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6304e05"><span style="font-weight: bold; font-style: italic;">res</span> = run(1, q, lconj(fail, eq(<span style="font-style: italic;">"corn"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9e16285"><span style="font-weight: bold; font-style: italic;">res</span> = run(1, q, lconj(eq(<span style="font-style: italic;">"meal"</span>, q), eq(<span style="font-style: italic;">"corn"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb2068e9"><span style="font-weight: bold; font-style: italic;">res</span> = run(1, q, lconj(eq(<span style="font-style: italic;">"corn"</span>, q), eq(<span style="font-style: italic;">"corn"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('corn',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb5dfd08"><span style="font-weight: bold;">from</span> kanren.core <span style="font-weight: bold;">import</span> ldisj
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, ldisj(fail, fail))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org173bb4f"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, ldisj(eq(<span style="font-style: italic;">"olive"</span>, q), fail))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('olive',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf29232a"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, ldisj(fail, eq(<span style="font-style: italic;">"olive"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('olive',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org61a07e8"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, ldisj(eq(<span style="font-style: italic;">"olive"</span>, q), eq(<span style="font-style: italic;">"oil"</span>, q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('olive', 'oil')
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orged35a26"><span style="font-weight: bold; font-style: italic;">x</span>, <span style="font-weight: bold; font-style: italic;">y</span> = var(<span style="font-style: italic;">'x'</span>), var(<span style="font-style: italic;">'y'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, ldisj(eq((x, y), q), eq((y, x), q)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~y), (~y, ~x))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9f7ba4d"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, ldisj(
+    lconj(eq(<span style="font-style: italic;">"olive"</span>, x), fail),
+    eq(<span style="font-style: italic;">"oil"</span>, x)
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('oil',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7840836"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, ldisj(
+    lconj(eq(<span style="font-style: italic;">"olive"</span>, x), succeed),
+    eq(<span style="font-style: italic;">"oil"</span>, x),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('olive', 'oil')
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9744408"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, ldisj(
+    eq(<span style="font-style: italic;">"oil"</span>, x),
+    lconj(eq(<span style="font-style: italic;">"olive"</span>, x), succeed),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('oil', 'olive')
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9c3f070"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, ldisj(
+    lconj(eq(<span style="font-style: italic;">"virgin"</span>, x), fail),
+    ldisj(
+        eq(<span style="font-style: italic;">"olive"</span>, x),
+        ldisj(
+            succeed,
+            eq(<span style="font-style: italic;">"oil"</span>, x)
+        ),
+    )
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('olive', ~x, 'oil')
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1088252"><span style="font-weight: bold; font-style: italic;">r</span> = var(<span style="font-style: italic;">'r'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, r, lconj(
+    eq(<span style="font-style: italic;">"split"</span>, x),
+    lconj(
+        eq(<span style="font-style: italic;">"pea"</span>, y),
+        eq((x, y), r)
+    ),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd71272b"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, r, lconj(
+    lconj(
+        eq(<span style="font-style: italic;">"split"</span>, x),
+        eq(<span style="font-style: italic;">"pea"</span>, y),
+    ),
+    eq((x, y), r),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'),)
+
+</pre>
+
+<p>
+Let's now simplify this expression:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org592db46"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), lconj(
+        eq(<span style="font-style: italic;">"split"</span>, x),
+        eq(<span style="font-style: italic;">"pea"</span>, y),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org5943088"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), ldisj(
+        lconj(
+            eq(<span style="font-style: italic;">"split"</span>, x),
+            eq(<span style="font-style: italic;">"pea"</span>, y),
+        ),
+        lconj(
+            eq(<span style="font-style: italic;">"red"</span>, x),
+            eq(<span style="font-style: italic;">"bean"</span>, y),
+        ),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'), ('red', 'bean'))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf3bb74b"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, r, lconj(
+    ldisj(
+        lconj(
+            eq(<span style="font-style: italic;">"split"</span>, x),
+            eq(<span style="font-style: italic;">"pea"</span>, y),
+        ),
+        lconj(
+            eq(<span style="font-style: italic;">"red"</span>, x),
+            eq(<span style="font-style: italic;">"bean"</span>, y),
+        ),
+    ),
+    eq((x, y, <span style="font-style: italic;">"soup"</span>), r)
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea', 'soup'), ('red', 'bean', 'soup'))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org78df671"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">teacupo</span>(t):
+    <span style="font-weight: bold;">return</span> ldisj(eq(<span style="font-style: italic;">"tea"</span>, t), eq(<span style="font-style: italic;">"cup"</span>, t))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgce2adcd"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, teacupo(q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('tea', 'cup')
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge389368"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), ldisj(
+    lconj(teacupo(x), eq(succeed, y)),
+    lconj(eq(fail, x), eq(succeed, y))
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('tea', &lt;function succeed at 0x7facc6cfc430&gt;), (&lt;function fail at 0x7facc6cfc310&gt;, &lt;function succeed at 0x7facc6cfc430&gt;), ('cup', &lt;function succeed at 0x7facc6cfc430&gt;))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org74f5e14"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), teacupo(x), teacupo(y))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('tea', 'tea'), ('cup', 'tea'), ('tea', 'cup'), ('cup', 'cup'))
+
+</pre>
+
+<p>
+<i>this will need an explantion to understand why 'tea' and 'cup' are not repeated.</i>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc170344"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), teacupo(x), teacupo(x))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('tea', ~y), ('cup', ~y))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb144b90"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), ldisj(
+    lconj(teacupo(x), teacupo(x)),
+    lconj(eq(fail, x), teacupo(y)),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('tea', ~y), (&lt;function fail at 0x7facc6cfc310&gt;, 'tea'), ('cup', ~y), (&lt;function fail at 0x7facc6cfc310&gt;, 'cup'))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3daab4d"><span style="font-weight: bold;">from</span> kanren <span style="font-weight: bold;">import</span> conde
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), conde(
+    (eq(<span style="font-style: italic;">"split"</span>, x), eq(<span style="font-style: italic;">"pea"</span>, y)),
+    (eq(<span style="font-style: italic;">"red"</span>, x), eq(<span style="font-style: italic;">"bean"</span>, y)),
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'), ('red', 'bean'))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4c8e58c"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, r, conde(
+    (eq(<span style="font-style: italic;">"olive"</span>, r), fail),
+    (eq(<span style="font-style: italic;">"oil"</span>, r),)
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('oil',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2de108b"><span style="font-weight: bold; font-style: italic;">z</span> = var(<span style="font-style: italic;">'z'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), conde(
+    (eq(<span style="font-style: italic;">"lentil"</span>, z),),
+    (eq(x, y),)
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((~x, ~y), (~y, ~y))
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgcdd7ce7"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, (x, y), conde(
+    (eq(<span style="font-style: italic;">"split"</span>, x), eq(<span style="font-style: italic;">"pea"</span>, y)),
+    (eq(<span style="font-style: italic;">"red"</span>, x), eq(<span style="font-style: italic;">"bean"</span>, y)),
+    (eq(<span style="font-style: italic;">"green"</span>, x), eq(<span style="font-style: italic;">"lentil"</span>, y))
+))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('split', 'pea'), ('red', 'bean'), ('green', 'lentil'))
+
+</pre>
+
+<blockquote>
+<p>
+The law of \(\text{cond}^e\):
+</p>
+
+<p>
+Every <i>successful</i> \(\text{cond}^e\) line contributes one or more values.
+</p>
+</blockquote>
+</div>
+
+<div id="outline-container-org2b081c3" class="outline-3">
+<h3 id="org2b081c3"><span class="todo TODO">TODO</span> What is a logic variable</h3>
+</div>
+<div id="outline-container-orgaa3adc3" class="outline-3">
+<h3 id="orgaa3adc3"><span class="todo TODO">TODO</span> What is a goal here?</h3>
+</div>
+</div>
+
+<div id="outline-container-org668d729" class="outline-2">
+<h2 id="org668d729">Teaching old toys new tricks</h2>
+<div class="outline-text-2" id="text-org668d729">
+<p>
+We will see \(\text{car}^o\), \(\text{cons}^o\) and \(\text{cdr}^o\).
+</p>
+</div>
+
+<div id="outline-container-orgec7e065" class="outline-3">
+<h3 id="orgec7e065">car</h3>
+<div class="outline-text-3" id="text-orgec7e065">
+<div class="org-src-container">
+<pre class="src src-python" id="org7a30cc7"><span style="font-weight: bold;">from</span> cons <span style="font-weight: bold;">import</span> car
+
+<span style="font-weight: bold;">print</span>(car((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>)))
+</pre>
+</div>
+
+<pre class="example">
+grape
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgbfb7d57"><span style="font-weight: bold;">print</span>(car(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>)))
+</pre>
+</div>
+
+<pre class="example">
+a
+
+</pre>
+
+<p>
+The definition of <code>caro</code> is given in frame 6 but since it is not implemented in <code>kanren</code> we need to define it now:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">caro</span>(t, car):
+    <span style="font-weight: bold;">return</span> eq(cons(car, var()), t)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org33ae0d5"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, caro(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>), q))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('a',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2991c5d"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, q, caro(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>), <span style="font-style: italic;">"a"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~q,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7c1e36a"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, r, caro((r, y), x), eq(<span style="font-style: italic;">"pear"</span>, x))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('pear',)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org80191e4" class="outline-3">
+<h3 id="org80191e4">cdr</h3>
+<div class="outline-text-3" id="text-org80191e4">
+<div class="org-src-container">
+<pre class="src src-python" id="orga11951c"><span style="font-weight: bold; font-style: italic;">res</span> = cons(
+    car((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>)),
+    car(((<span style="font-style: italic;">"a"</span>), (<span style="font-style: italic;">"b"</span>), (<span style="font-style: italic;">"c"</span>))),
+)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(grape . a)
+
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org58cd61f"><span style="font-weight: bold; font-style: italic;">res</span> = run(
+    0,
+    r,
+    caro((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>), x),
+    caro(((<span style="font-style: italic;">"a"</span>), (<span style="font-style: italic;">"b"</span>), (<span style="font-style: italic;">"c"</span>)), y),
+    eq(cons(x, y), r)
+)
+
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(ConsPair('grape', 'a'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd34a154"><span style="font-weight: bold;">from</span> cons <span style="font-weight: bold;">import</span> cdr
+
+<span style="font-weight: bold; font-style: italic;">res</span> = cdr((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('raisin', 'pear')
+
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org50875b3"><span style="font-weight: bold;">from</span> cons <span style="font-weight: bold;">import</span> cdr
+
+<span style="font-weight: bold; font-style: italic;">res</span> = car(cdr(cdr(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>))))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+o
+
+</pre>
+
+<p>
+We can now define <code>cdro</code> using <code>conso</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">cdro</span>(p, d):
+    <span style="font-weight: bold;">return</span> eq(cons(var(), d), p)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge235ff3"><span style="font-weight: bold; font-style: italic;">v</span>, <span style="font-weight: bold; font-style: italic;">w</span> = var(<span style="font-style: italic;">"v"</span>), var(<span style="font-style: italic;">"w"</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, r,
+    cdro(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>), v),
+    cdro(v, w),
+    caro(w, r),
+)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('o',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6e1d230"><span style="font-weight: bold; font-style: italic;">res</span> = cons(
+    cdr((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>)),
+    car(((<span style="font-style: italic;">"a"</span>), (<span style="font-style: italic;">"b"</span>), (<span style="font-style: italic;">"c"</span>))),
+)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('raisin', 'pear') . a)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org68ba62c"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, r,
+    cdro((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>), x),
+    caro(((<span style="font-style: italic;">"a"</span>), (<span style="font-style: italic;">"b"</span>), (<span style="font-style: italic;">"c"</span>)), y),
+    eq(cons(x, y), r)
+)
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(ConsPair(('raisin', 'pear'), 'a'),)
+
+</pre>
+
+<p>
+Another way that might reflect more the fact that <code>fresh(x, y)</code> only defines <code>x</code> and <code>y</code> in the current scope:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">from</span> kanren <span style="font-weight: bold;">import</span> lall
+
+<span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(r):
+    <span style="font-weight: bold; font-style: italic;">x</span>, <span style="font-weight: bold; font-style: italic;">y</span> = var(<span style="font-style: italic;">'x'</span>), var(<span style="font-style: italic;">'y'</span>)
+    <span style="font-weight: bold;">return</span> lall(
+        cdro((<span style="font-style: italic;">"grape"</span>, <span style="font-style: italic;">"raisin"</span>, <span style="font-style: italic;">"pear"</span>), x),
+        caro(((<span style="font-style: italic;">"a"</span>), (<span style="font-style: italic;">"b"</span>), (<span style="font-style: italic;">"c"</span>)), y),
+        eq(cons(x, y), r)
+    )
+
+<span style="font-weight: bold;">print</span>(run(0, r, goal(r)))
+</pre>
+</div>
+
+<pre class="example">
+(ConsPair(('raisin', 'pear'), 'a'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd3ffc34"><span style="font-weight: bold;">print</span>(run(0, r, cdro(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"acorn"</span>), <span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"corn"</span>))))
+</pre>
+</div>
+
+<pre class="example">
+(~r,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgcf3689f"><span style="font-weight: bold;">print</span>(run(0, x, cdro(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"corn"</span>), (x, <span style="font-style: italic;">"r"</span>, <span style="font-style: italic;">"n"</span>))))
+</pre>
+</div>
+
+<pre class="example">
+('o',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7b06210"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(l):
+    <span style="font-weight: bold; font-style: italic;">x</span> = var()
+    <span style="font-weight: bold;">return</span> lall(
+        cdro(l, <span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"corn"</span>)),
+        caro(l, x),
+        eq(<span style="font-style: italic;">"a"</span>, x)
+    )
+
+<span style="font-weight: bold;">print</span>(run(0, r, goal(r)))
+</pre>
+</div>
+
+<pre class="example">
+(('a', 'c', 'o', 'r', 'n'),)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc1d76f3" class="outline-3">
+<h3 id="orgc1d76f3">conso</h3>
+<div class="outline-text-3" id="text-orgc1d76f3">
+<div class="org-src-container">
+<pre class="src src-python" id="org353c17f"><span style="font-weight: bold; font-style: italic;">l</span> = var(<span style="font-style: italic;">'l'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, conso(<span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"abc"</span>), <span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"de"</span>), l))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+((('a', 'b', 'c'), 'd', 'e'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgea494e9"><span style="font-weight: bold; font-style: italic;">x</span> = var(<span style="font-style: italic;">'x'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, conso(x, <span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"abc"</span>), <span style="font-weight: bold;">tuple</span>(<span style="font-style: italic;">"dabc"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('d',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8cfa2f6"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(r):
+    <span style="font-weight: bold; font-style: italic;">x</span>, <span style="font-weight: bold; font-style: italic;">y</span>, <span style="font-weight: bold; font-style: italic;">z</span> = <span style="font-weight: bold;">vars</span>(3)
+    <span style="font-weight: bold;">return</span> lall(
+        eq((<span style="font-style: italic;">"e"</span>, <span style="font-style: italic;">"a"</span>, <span style="font-style: italic;">"d"</span>, x), r),
+        conso(y, (<span style="font-style: italic;">"a"</span>, z, <span style="font-style: italic;">"c"</span>), r)
+    )
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, goal(l))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('e', 'a', 'd', 'c'),)
+
+</pre>
+
+<p>
+As an aside, be careful with named variables as they are taken into account in the process (TODO: where in the implementation?)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="font-weight: bold;">from</span> cons <span style="font-weight: bold;">import</span> cons
+
+<span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(x):
+    <span style="font-weight: bold; font-style: italic;">v</span> = var(<span style="font-style: italic;">'v'</span>)
+    <span style="font-weight: bold;">return</span> lall(
+        eq(v, <span style="font-style: italic;">"a b c"</span>),
+        eq(x, cons(v, <span style="font-style: italic;">"d"</span>))
+    )
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, goal(l))
+<span style="font-weight: bold;">print</span>(res)
+
+<span style="font-weight: bold; font-style: italic;">w</span> = var(<span style="font-style: italic;">'v'</span>)
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, w, goal(w))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(ConsPair('a b c', 'd'),)
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org71a6553"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, conso(x, (<span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>), (<span style="font-style: italic;">"d"</span>, <span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+('d',)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf5cf02b"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(l):
+    <span style="font-weight: bold; font-style: italic;">x</span> = var()
+    <span style="font-weight: bold;">return</span> lall(
+        eq((<span style="font-style: italic;">"d"</span>, <span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>), l),
+        conso(x, (<span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>), l),
+    )
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, goal(l))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('d', 'a', 'd', 'c'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org654241a"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(l):
+    <span style="font-weight: bold; font-style: italic;">x</span> = var()
+    <span style="font-weight: bold;">return</span> lall(
+        conso(x, (<span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>), l),
+        eq((<span style="font-style: italic;">"d"</span>, <span style="font-style: italic;">"a"</span>, x, <span style="font-style: italic;">"c"</span>), l),
+    )
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, goal(l))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('d', 'a', 'd', 'c'),)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org663e45a"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">conso</span>(a, d, p):
+    <span style="font-weight: bold;">return</span> lall(
+        caro(p, a),
+        cdro(p, d),
+    )
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgbf44af8"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">conso</span>(a, d, p):
+    <span style="font-weight: bold;">return</span> eq((a, d), p)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga25b607"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">goal</span>(l):
+    <span style="font-weight: bold; font-style: italic;">d</span>, <span style="font-weight: bold; font-style: italic;">t</span>, <span style="font-weight: bold; font-style: italic;">x</span>, <span style="font-weight: bold; font-style: italic;">y</span>, <span style="font-weight: bold; font-style: italic;">w</span> = <span style="font-weight: bold;">vars</span>(5)
+    <span style="font-weight: bold;">return</span> lall(
+        conso(w, (<span style="font-style: italic;">"n"</span>, <span style="font-style: italic;">"u"</span>, <span style="font-style: italic;">"s"</span>), t),
+        cdro(l, t),
+        caro(l, x),
+        eq((<span style="font-style: italic;">"b"</span>), x),
+        cdro(l, d),
+        caro(d, y),
+        eq((<span style="font-style: italic;">"o"</span>), y)
+    )
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(1, l, goal(l))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(('b', 'o', 'n', 'u', 's'),)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org58f4e42" class="outline-3">
+<h3 id="org58f4e42">nullo</h3>
+<div class="outline-text-3" id="text-org58f4e42">
+<div class="org-src-container">
+<pre class="src src-python" id="org955682e"><span style="font-weight: bold;">from</span> kanren.goals <span style="font-weight: bold;">import</span> nullo
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, nullo((<span style="font-style: italic;">"gape"</span>, <span style="font-style: italic;">"raison"</span>, <span style="font-style: italic;">"pear"</span>)))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3128ae2"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, nullo([]))
+<span style="font-weight: bold;">print</span>(res)
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, l, nullo(()))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+(~l,)
+(~l,)
+
+</pre>
+
+<p>
+Note that by default <code>ConsNull</code> is a <code>list</code>, but this can be changed by passing <code>tuple</code> as a kwarg:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org0f68e5e"><span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, nullo(x))
+<span style="font-weight: bold;">print</span>(res)
+
+<span style="font-weight: bold; font-style: italic;">res</span> = run(0, x, nullo(x, default_ConsNull=<span style="font-weight: bold;">tuple</span>))
+<span style="font-weight: bold;">print</span>(res)
+</pre>
+</div>
+
+<pre class="example">
+([],)
+((),)
+
+</pre>
+
+<p>
+<code>kanren</code>'s <code>nullo</code> implementation can take several variable as an input, in which case <i>every</i> variable is associated with the <code>NullType</code>.
+</p>
+
+<p>
+(TODO: understand the <code>refs</code> kwarg and its purpose)
+</p>
+
+<p>
+Here we assume that the nulltype is an empty tuple. See the <a href="https://github.com/pythological/kanren/blob/9f19cd4077db010ed20e037dc7bda3ff230bda6e/kanren/goals.py#L42">implementation in kanren</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org11262ea"><span style="font-weight: bold;">def</span> <span style="font-weight: bold;">nullo</span>(x):
+    <span style="font-weight: bold;">return</span> eq(x, <span style="font-weight: bold;">tuple</span>())
+</pre>
+</div>
+
+<p>
+The following two relations are very lisp-specific, but we will cover them for pedagogical purposes anyway.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org555e318" class="outline-3">
+<h3 id="org555e318">pairo</h3>
+</div>
+<div id="outline-container-org0052f72" class="outline-3">
+<h3 id="org0052f72">singleton</h3>
+</div>
+</div>
+
+<div id="outline-container-orgc97e8cd" class="outline-2">
+<h2 id="orgc97e8cd">Seeings old friends in new ways</h2>
+</div>
+<div id="outline-container-org0596344" class="outline-2">
+<h2 id="org0596344">Double your fun</h2>
+</div>
+<div id="outline-container-org6c9c007" class="outline-2">
+<h2 id="org6c9c007">Members only</h2>
+</div>
+<div id="outline-container-orgdf8b495" class="outline-2">
+<h2 id="orgdf8b495">The fun never ends&#x2026;</h2>
+</div>
+<div id="outline-container-orgb2ccb25" class="outline-2">
+<h2 id="orgb2ccb25">A bit too mch</h2>
+</div>
+<div id="outline-container-orga9c69aa" class="outline-2">
+<h2 id="orga9c69aa">Just a bit more</h2>
+</div>
+<div id="outline-container-org6d2de2a" class="outline-2">
+<h2 id="org6d2de2a">Thin ice</h2>
+</div>
+<div id="outline-container-orga52b98f" class="outline-2">
+<h2 id="orga52b98f">Under the hood</h2>
+</div>
+</div>
+</body>
+</html>
