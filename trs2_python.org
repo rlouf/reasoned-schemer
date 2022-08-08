@@ -816,12 +816,207 @@ print(run(0, r, goal(r)))
 : (('a', 'c', 'o', 'r', 'n'),)
 
 ** conso
-** pairo
+
+#+begin_src python :session :exports none :results silent
+from kanren import var, conso, run, lall, eq, vars
+#+end_src
+
+#+name: 2-19
+#+begin_src python :session
+l = var('l')
+res = run(0, l, conso(tuple("abc"), tuple("de"), l))
+print(res)
+#+end_src
+
+#+RESULTS: 2-19
+: ((('a', 'b', 'c'), 'd', 'e'),)
+
+#+name: 2-20
+#+begin_src python :session
+x = var('x')
+res = run(0, x, conso(x, tuple("abc"), tuple("dabc")))
+print(res)
+#+end_src
+
+#+RESULTS: 2-20
+: ('d',)
+
+#+name: 2-21
+#+begin_src python :session
+def goal(r):
+    x, y, z = vars(3)
+    return lall(
+        eq(("e", "a", "d", x), r),
+        conso(y, ("a", z, "c"), r)
+    )
+
+res = run(0, l, goal(l))
+print(res)
+#+end_src
+
+#+RESULTS: 2-21
+: (('e', 'a', 'd', 'c'),)
+
+As an aside, be careful with named variables as they are taken into account in the process (TODO: where in the implementation?)
+
+#+begin_src python :session
+from cons import cons
+
+def goal(x):
+    v = var('v')
+    return lall(
+        eq(v, "a b c"),
+        eq(x, cons(v, "d"))
+    )
+
+res = run(0, l, goal(l))
+print(res)
+
+w = var('v')
+res = run(0, w, goal(w))
+print(res)
+#+end_src
+
+#+RESULTS:
+: (ConsPair('a b c', 'd'),)
+: ()
+
+#+name: 2-22
+#+begin_src python :session
+res = run(0, x, conso(x, ("a", x, "c"), ("d", "a", x, "c")))
+print(res)
+#+end_src
+
+#+RESULTS: 2-22
+: ('d',)
+
+#+name: 2-23
+#+begin_src python :session
+def goal(l):
+    x = var()
+    return lall(
+        eq(("d", "a", x, "c"), l),
+        conso(x, ("a", x, "c"), l),
+    )
+
+res = run(0, l, goal(l))
+print(res)
+#+end_src
+
+#+RESULTS: 2-23
+: (('d', 'a', 'd', 'c'),)
+
+#+name: 2-24
+#+begin_src python :session
+def goal(l):
+    x = var()
+    return lall(
+        conso(x, ("a", x, "c"), l),
+        eq(("d", "a", x, "c"), l),
+    )
+
+res = run(0, l, goal(l))
+print(res)
+#+end_src
+
+#+RESULTS: 2-24
+: (('d', 'a', 'd', 'c'),)
+
+#+name: 2-25
+#+begin_src python :session
+def conso(a, d, p):
+    return lall(
+        caro(p, a),
+        cdro(p, d),
+    )
+#+end_src
+
+#+name: 2-26
+#+begin_src python :session
+def conso(a, d, p):
+    return eq((a, d), p)
+#+end_src
+
+#+name: 2-27
+#+begin_src python :session
+def goal(l):
+    d, t, x, y, w = vars(5)
+    return lall(
+        conso(w, ("n", "u", "s"), t),
+        cdro(l, t),
+        caro(l, x),
+        eq(("b"), x),
+        cdro(l, d),
+        caro(d, y),
+        eq(("o"), y)
+    )
+
+res = run(1, l, goal(l))
+print(res)
+#+end_src
+
+#+RESULTS: 2-27
+: (('b', 'o', 'n', 'u', 's'),)
+
 ** nullo
+
+#+name 2-30
+#+begin_src python :session
+from kanren.goals import nullo
+
+res = run(0, l, nullo(("gape", "raison", "pear")))
+print(res)
+#+end_src
+
+#+RESULTS:
+: ()
+
+#+name 2-31
+#+begin_src python :session
+res = run(0, l, nullo([]))
+print(res)
+
+res = run(0, l, nullo(()))
+print(res)
+#+end_src
+
+#+RESULTS:
+: (~l,)
+: (~l,)
+
+Note that by default =ConsNull= is a =list=, but this can be changed by passing =tuple= as a kwarg:
+
+#+name 2-32
+#+begin_src python :session
+res = run(0, x, nullo(x))
+print(res)
+
+res = run(0, x, nullo(x, default_ConsNull=tuple))
+print(res)
+#+end_src
+
+#+RESULTS:
+: ([],)
+: ((),)
+
+=kanren='s =nullo= implementation can take several variable as an input, in which case /every/ variable is associated with the =NullType=.
+
+(TODO: understand the =refs= kwarg and its purpose)
+
+Here we assume that the nulltype is an empty tuple. See the [[https://github.com/pythological/kanren/blob/9f19cd4077db010ed20e037dc7bda3ff230bda6e/kanren/goals.py#L42][implementation in kanren]].
+
+#+name 2-33
+#+begin_src python :session
+def nullo(x):
+    return eq(x, tuple())
+#+end_src
+
+The following two relations are very lisp-specific, but we will cover them for pedagogical purposes anyway.
+
+** pairo
 ** singleton
 
 * Seeings old friends in new ways
-
 * Double your fun
 * Members only
 * The fun never ends...
