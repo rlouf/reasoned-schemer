@@ -1,5 +1,5 @@
 #+tiTLE: The Reasoned Schemer: Python
-#+property: header-args :results output
+#+property: header-args :results output :exports both
 
 #+begin_abstract
 We implement the examples from "The Reasoned Schemer" using [[https://github.com/pythological][Pythological]]'s implementation of miniKanren.
