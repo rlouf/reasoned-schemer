@@ -1,30 +1,19 @@
 # The Reasoned Schemer
 
-This a Racket implementation of /The Reasoned Schemer/'s examples. To be able to run the example you will need to install the canonical implementation of miniKanren in Racket with:
+This repository contains both a Racket and a Python implementation of _The Reasoned Schemer_ (2nd Ed.). 
 
-``` sh
+## Racket
+
+To run the examples in Racket you will need to install the canonical implementation of miniKanren in Racket with:
+
+```sh
 raco pkg install github://github.com/miniKanren/Racket-miniKanren/master
 ```
 
+## Python
 
-# Notes
+To run the examples in Python you will need to install `kanren` with:
 
-``` asciidoc
-+--------------------------------------------------------------------+
-|                       The first law of ==                          |
-|                                                                    |
-|                (== v w ) can be replaced with (== w v)             |
-+--------------------------------------------------------------------+
-```
-
-
-- Every variable is initially fresh. A variable is no longer fresh if it becomes associated with a non-variable value of if it becomes associated with a variable that, itself, is no longer fresh.
-
-``` asciidoc
-+--------------------------------------------------------------------+
-|                      The second law of ==                          |
-|                                                                    |
-| If x is fresh, then (== v x) succeeds and associates v with x,     |
-| unless x occurs in v.                                              |
-+--------------------------------------------------------------------+
+```sh
+pip install miniKanren
 ```
