@@ -606,7 +606,7 @@ Every /successful/ $\text{cond}^e$ line contributes one or more values.
 
 * Teaching old toys new tricks
 
-We will see $\text{car}^o$, $\text{cons}^o$ and $\text{cdr}^o$.
+We will see $\text{car}^o$, $\text{cons}^o$ and $\text{cdr}^o$. The relations in this chapter may appear obscure to python developers that have not been exposed to LISP, and a small introduction on S-expression and the [[https://github.com/pythological/python-cons][python-cons]] library could be useful.
 
 ** car
 
@@ -1013,10 +1013,170 @@ def nullo(x):
 
 #+RESULTS: 2-33
 
-The following two relations are very lisp-specific, but we will cover them for pedagogical purposes anyway.
-
 ** pairo
+
+#+name: 2-41
+#+begin_src python :session
+from cons import car
+
+print(car(("pear",)))
+#+end_src
+
+#+RESULTS:
+: pear
+
+#+name: 2-42
+#+begin_src python :session
+from cons import cdr
+
+print(cdr(("pear",)))
+#+end_src
+
+#+RESULTS: 2-42
+: ()
+
+#+name: 2-44
+#+begin_src python :session
+from cons import cons
+
+print(cons(("split",), "pea"))
+#+end_src
+
+#+RESULTS: 2-43
+: (('split',) . pea)
+
+#+name: 2-45
+#+begin_src python :session
+from kanren import var, run, vars, eq
+
+def goal(r):
+    x, y = var('x'), var('y')
+    return eq(cons(x, cons(y, "salad")), r)
+
+r = var()
+res = run(0, r, goal(r))
+print(res)
+#+end_src
+
+#+RESULTS: 2-45
+: (ConsPair(~x, ConsPair(~y, 'salad')),)
+
+#+name: 2-46
+#+begin_src python :session :results silent
+from kanren import conso
+
+def pairo(p):
+    a, d = vars(2)
+    return conso(a, d, p)
+#+end_src
+
+=pairo= succeeds and =q= remains fresh in the following example:
+
+#+name: 2-47
+#+begin_src python :session
+q = var()
+res = run(0, q, pairo(cons(q, q)))
+print(res)
+#+end_src
+
+#+RESULTS: 2-47
+: (~_11,)
+
+#+name: 2-48
+#+begin_src python :session
+q = var()
+res = run(0, q, pairo(tuple()))
+print(res)
+#+end_src
+
+#+RESULTS: 2-48
+: ()
+
+#+name: 2-49
+#+begin_src python :session
+q = var()
+res = run(0, q, pairo("pair"))
+print(res)
+#+end_src
+
+#+RESULTS: 2-49
+: ()
+
+=x= is a pair of two fresh variables:
+
+#+name: 2-50
+#+begin_src python :session
+x = var()
+res = run(0, x, pairo(x))
+print(res)
+#+end_src
+
+#+RESULTS: 2-50
+: (ConsPair(~_21, ~_22),)
+
+#+name: 2-51
+#+begin_src python :session
+r = var()
+res = run(0, r, pairo(cons(r, ())))
+print(res)
+#+end_src
+
+#+RESULTS: 2-51
+: (~_23,)
+
 ** singleton
+
+#+name: 2-58
+#+begin_src python :session
+def is_pair(l):
+    return len(l) == 2
+
+def is_null(l):
+    return len(l) > 0
+
+def is_singleton(l):
+    if is_pair(l):
+        return is_null(cdr(l))
+    else:
+        return False
+#+end_src
+
+#+name: 2-64
+#+begin_src python :session
+from kanren import conde, lall
+
+def singletono(l):
+    d = var()
+    return conde(
+        [pairo(l), lall(cdro(l, d), nullo(d))],
+        [succeed, fail]
+    )
+#+end_src
+
+/Any $\text{cond}^e$ line that has top-level =fail= as a goal cannot contribute values./
+
+#+name: 2-64
+#+begin_src python :session
+from kanren import conde, lall
+
+def singletono(l):
+    d = var()
+    return conde(
+        [pairo(l), lall(cdro(l, d), nullo(d))],
+    )
+#+end_src
+
+We do not need =pairo= in the definition of =singletono=: =pairo(l)= succeeds exactly when =cdro(l, d)= suceeds, so we have the simplified version of =singletono=:
+
+#+name: 2-65
+#+begin_src python :session
+def singletono(l):
+    d = var()
+    return lall(
+        cdro(l, d),
+        nullo(d)
+    )
+#+end_src
 
 * Seeings old friends in new ways
 * Double your fun
